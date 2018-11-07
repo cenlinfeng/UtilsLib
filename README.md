@@ -7,7 +7,6 @@ allprojects {
 	}
 }
 dependencies {
-
 	implementation 'com.github.cenlinfeng:UtilsLib:0.101'
 }  
   
