@@ -16,7 +16,7 @@ dependencies {
 
 }  
 
-###1 加载框
+##1 加载框
   
 简单的LoadingView加载框
   
@@ -28,11 +28,11 @@ LoadingView.getInstance().showLoading("正在加载...");
 
 LoadingView.getInstance().hideLoading();
 
-###2 流式布局
+##2 流式布局
 
 增加流式布局，属性只有flow_gravity (left,center,right)
 
-###3 Toast工具类
+##3 Toast工具类
 
 增加Toast工具类
 
