@@ -1,1 +1,1 @@
-include ':app', ':loading_lib', ':flowlayout'
+include ':app', ':view_lib', ':layout_lib', ':utils'
