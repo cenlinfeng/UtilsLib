@@ -15,6 +15,8 @@ dependencies {
 	implementation 'com.github.cenlinfeng:UtilsLib:0.101'
 
 }  
+
+###1 加载框
   
 简单的LoadingView加载框
   
@@ -26,9 +28,17 @@ LoadingView.getInstance().showLoading("正在加载...");
 
 LoadingView.getInstance().hideLoading();
 
+###2 流式布局
 
+增加流式布局，属性只有flow_gravity (left,center,right)
 
-# 11.7
-1.增加LogUtils 打印Log工具
-2.获取Phone信息工具（部分，未完成）
+###3 Toast工具类
+
+增加Toast工具类
+
+ToastUtils.showToast(context, "测试吐司");
+
+或者
+
+ToastUtils.showToast(this, "测试吐司", Toast.LENGTH_LONG);
 
