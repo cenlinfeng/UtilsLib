@@ -1,6 +1,7 @@
 package com.loading_lib;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -18,7 +20,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.Constance.Constance;
 import com.adapter.PhotoAdapter;
+import com.entity.PhotoSelectBean;
 import com.example.loading_lib.R;
 
 import java.util.ArrayList;
@@ -33,9 +37,9 @@ public class PhotoSelectView extends AppCompatActivity {
     private GridView mGridView;
     
     private List<String> mName;
-    private List<String> mPath;
+    private ArrayList<PhotoSelectBean> mPath;
     private List<String> mInfo;
-    private static int PHOTO_REQUEST = 0x22;
+    
     private PhotoAdapter mPhotoAdapter;
     
     @Override
@@ -43,11 +47,7 @@ public class PhotoSelectView extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.phone_view);
-        
-        
         initView();
-        
-        
         requestPermission();
     }
     
@@ -58,7 +58,7 @@ public class PhotoSelectView extends AppCompatActivity {
             getAllImage();
         } else {//无权限
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PHOTO_REQUEST);
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constance.PHOTO_REQUEST);
             } else {
                 getAllImage();
             }
@@ -85,7 +85,7 @@ public class PhotoSelectView extends AppCompatActivity {
             //获取图片的详细信息
             String desc = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DESCRIPTION));
             mName.add(disPlayName);
-            mPath.add(new String(path, 0, path.length - 1));
+            mPath.add(new PhotoSelectBean(false, new String(path, 0, path.length - 1)));
             mInfo.add(desc);
         }
         fillGridView();
@@ -99,9 +99,11 @@ public class PhotoSelectView extends AppCompatActivity {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("PhotoSelectView", "点击事件");
                 clickGridViewItem(position);
             }
         });
+        
     }
     
     /**
@@ -110,7 +112,10 @@ public class PhotoSelectView extends AppCompatActivity {
      * @param position
      */
     private void clickGridViewItem(int position) {
-    
+        Intent intent = new Intent(this, BigImageView.class);
+        intent.putParcelableArrayListExtra("data", mPhotoAdapter.getPaths());
+        intent.putExtra("position", position);
+        startActivityForResult(intent, Constance.PHOTO_SELECT_REQUEST);
     }
     
     private void initView() {
@@ -146,13 +151,28 @@ public class PhotoSelectView extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             //通过
-            if (requestCode == PHOTO_REQUEST) {
+            if (requestCode == Constance.PHOTO_REQUEST) {
                 getAllImage();
             }
         } else {
             //不通过
             Toast.makeText(this, "请通过权限之后再进入此界面", Toast.LENGTH_SHORT).show();
         }
-        
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Constance.PHOTO_SELECT_RESULT && requestCode == Constance.PHOTO_SELECT_REQUEST) {
+            //选择图片回来了
+            ArrayList<PhotoSelectBean> path = data.getParcelableArrayListExtra("data");
+            if (path != null) {
+                mPath = path;
+            }
+            if (data.getIntExtra("position", 0) != 0) {
+                mGridView.setVerticalScrollbarPosition(data.getIntExtra("position", 0));
+            }
+            fillGridView();
+        }
     }
 }
