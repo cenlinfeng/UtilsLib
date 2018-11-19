@@ -46,8 +46,11 @@
 
 ### 3.应用工具类 AppUtils
 
-### 4.图片选择器（初步完成） 
+### 4.图片选择器 
+    
+    PhotoSelect.getInstance().openSelect(Activity, PhotoSelectCallBack, PhotoSelectOption)
 
 ### 5.LRUCache缓存
+
 
 

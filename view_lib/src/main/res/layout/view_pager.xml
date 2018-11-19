@@ -22,16 +22,6 @@
         android:animateLayoutChanges="true"
         android:background="@color/gray"
         app:navigationIcon="@drawable/ic_arrow_back_black_24dp">
-
-        <TextView
-            android:id="@+id/tv_success"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="10dp"
-            android:padding="10dp"
-            android:text="完成"
-            android:textColor="@color/white"/>
     </android.support.v7.widget.Toolbar>
 
 
